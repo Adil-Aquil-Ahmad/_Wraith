@@ -146,3 +146,4 @@ def get_rusuk_cnn():
         data = d.text.splitlines()
         return [item for item in data if item]
     return []
+

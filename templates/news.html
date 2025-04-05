@@ -3,24 +3,23 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>News Portal</title>
+    <title>Wraith News</title>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="../static/JS/News.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;600;700&family=Space+Mono&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="../static/CSS/News.css">
-    <link rel="stylesheet" href="../static/CSS/Lightmode.css">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@200;400;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-</head>
-<body class="dark-mode">
 
-    <!-- Header Section -->
+</head>
+
+<body>
+    <div class="status-indicator"></div>
+    <div class="tech-status">NEWS FEED ONLINE</div>
+
     <header>
         <div class="nav-container">
-            <div class="logo">Daily News</div>
+            <div class="logo">Wraith News</div>
 
-            <!-- Menu Toggle Button -->
             <button class="menu-toggle" onclick="toggleMenu()">
                 <i class="fas fa-bars"></i>
             </button>
@@ -34,12 +33,16 @@
                     <i class="fas fa-comments"></i> Forum
                 </button>
 
-                <div class="tdnn" onclick="toggleDarkMode()">
-                    <div class="moon"></div>
+                <div class="theme-toggle" id="themeToggle">
+                    <svg id="moonIcon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
+                    <svg id="sunIcon" style="display: none;" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>
                 </div>
             </div>
         </div>
     </header>
+
+    <div class="circuit-lines"></div>
+    <div class="tech-decor" id="techDecor"></div>
 
     <nav class="news-nav" id="nav-menu">
         <a onclick="fetchNews('all')">World</a>
@@ -50,9 +53,8 @@
         <a onclick="fetchNews('middleeast')">Middle East</a>
     </nav>
 
-    <!-- Search Bar -->
     <div class="search-container">
-        <input type="text" id="news-search" placeholder="Search news..." onkeyup="filterNews()">
+        <input type="text" id="news-search" placeholder="SEARCH NEWS DATABASE..." onkeyup="filterNews()">
         <img src="../static/Images/ShuffleStatic.png" 
              alt="Shuffle" 
              class="shuffle-icon" 
@@ -66,15 +68,78 @@
     </div>
 
     <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Theme toggle functionality
+            const themeToggle = document.getElementById('themeToggle');
+            const moonIcon = document.getElementById('moonIcon');
+            const sunIcon = document.getElementById('sunIcon');
+            const htmlElement = document.documentElement;
+            
+            // Check for saved theme preference or use default
+            const savedTheme = localStorage.getItem('theme') || 'dark';
+            htmlElement.setAttribute('data-theme', savedTheme);
+            updateThemeIcon(savedTheme);
+            
+            themeToggle.addEventListener('click', function() {
+                const currentTheme = htmlElement.getAttribute('data-theme');
+                const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+                
+                htmlElement.setAttribute('data-theme', newTheme);
+                localStorage.setItem('theme', newTheme);
+                updateThemeIcon(newTheme);
+            });
+            
+            function updateThemeIcon(theme) {
+                if (theme === 'dark') {
+                    moonIcon.style.display = 'block';
+                    sunIcon.style.display = 'none';
+                } else {
+                    moonIcon.style.display = 'none';
+                    sunIcon.style.display = 'block';
+                }
+            }
+            
+            // Create tech decorations
+            const techDecor = document.getElementById('techDecor');
+            
+            // Create circles
+            for (let i = 0; i < 5; i++) {
+                const circle = document.createElement('div');
+                circle.classList.add('decor-circle');
+                
+                const size = Math.floor(Math.random() * 100) + 50;
+                circle.style.width = `${size}px`;
+                circle.style.height = `${size}px`;
+                
+                circle.style.top = `${Math.floor(Math.random() * 100)}%`;
+                circle.style.left = `${Math.floor(Math.random() * 100)}%`;
+                
+                techDecor.appendChild(circle);
+            }
+            
+            // Create lines
+            for (let i = 0; i < 8; i++) {
+                const line = document.createElement('div');
+                line.classList.add('decor-line');
+                
+                const length = Math.floor(Math.random() * 100) + 50;
+                line.style.width = `${length}px`;
+                
+                line.style.top = `${Math.floor(Math.random() * 100)}%`;
+                line.style.left = `${Math.floor(Math.random() * 100)}%`;
+                
+                const angle = Math.floor(Math.random() * 360);
+                line.style.transform = `rotate(${angle}deg)`;
+                
+                techDecor.appendChild(line);
+            }
+        });
+
         function toggleMenu() {
             document.getElementById("nav-menu").classList.toggle("active");
         }
 
-        $('.tdnn').click(function () {
-            $(".moon").toggleClass('sun');
-            $(".tdnn").toggleClass('day');
-        });
-    </script>
 
+    </script>
 </body>
 </html>

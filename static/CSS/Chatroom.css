@@ -237,6 +237,12 @@ h2 {
   border-left: 3px solid var(--accent-secondary);
 }
 
+.message-container p {
+  margin: 0;
+  word-break: break-word;
+  flex: 1;
+}
+
 .message-container b {
   color: var(--accent-primary);
   font-weight: 600;
@@ -298,12 +304,6 @@ input::placeholder {
 
 #username {
   margin-bottom: 15px;
-}
-
-.message-container p {
-  margin: 0;
-  word-break: break-word;
-  flex: 1;
 }
 
 .input-group {

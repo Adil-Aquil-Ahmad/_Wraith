@@ -20,8 +20,6 @@ for eg: C:\Users\ADIL\Documents\GitHub\Wraith\tor\tor.exe -f C:\Users\ADIL\Docum
 
 Step - 3
 
-Run pip install -r requirements.txt
-
 Run python app.py in your terminal
 
 Step - 4
