@@ -1,2 +1,2 @@
-# _Wraith
+# Wraith
 Multi-level Encrypted Chatroom
