@@ -1,0 +1,7 @@
+feedparser
+requests
+beautifulsoup4
+flask
+flask-socketio
+PyQt5
+PyQtWebEngine
