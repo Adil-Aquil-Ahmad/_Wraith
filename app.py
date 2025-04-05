@@ -11,6 +11,7 @@ from werkzeug.utils import secure_filename
 from bson import ObjectId
 from bson import Binary
 
+
 app = Flask(__name__)
 app.config["SECRET_KEY"] = "AdilAAhmad"
 socketio = SocketIO(app, cors_allowed_origins="*")
