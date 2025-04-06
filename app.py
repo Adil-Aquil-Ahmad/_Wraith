@@ -10,10 +10,16 @@ import random
 from werkzeug.utils import secure_filename
 from bson import ObjectId
 from bson import Binary
+import threading
+import subprocess
+import time
+import multiprocessing
+
+
 
 app = Flask(__name__)
 app.config["SECRET_KEY"] = "AdilAAhmad"
-socketio = SocketIO(app, cors_allowed_origins="*")
+socketio = SocketIO(app, cors_allowed_origins="*", async_mode="threading")
 client = MongoClient("mongodb://localhost:27017/")
 db = client["forum_db"]
 posts_collection = db["posts"]
@@ -165,5 +171,54 @@ def add_comment(post_id):
     except Exception:
         return "Invalid Post ID", 400
 
+def run_flask():
+    socketio.run(app, host="127.0.0.1", port=8000, debug=True, use_reloader=False)
+
+def launch_browser():
+    time.sleep(5)
+    subprocess.Popen(["python", "browser.py"])
+
 if __name__ == "__main__":
-    socketio.run(app, host="127.0.0.1", port=8000, debug=True)
+    multiprocessing.freeze_support()
+
+    current_path = os.getcwd()
+
+    tor_folder = os.path.join(current_path, "tor")
+    data_directory = os.path.join(tor_folder, "Data")
+    hidden_service_dir = os.path.join(tor_folder, "hidden_service")
+    torrc_path = os.path.join(tor_folder, "torrc")
+    tor_path = os.path.join(tor_folder, "tor.exe")
+
+    os.makedirs(data_directory, exist_ok=True)
+    os.makedirs(hidden_service_dir, exist_ok=True)
+
+    torrc_content = f"""SocksPort 9050
+ControlPort 9051
+DataDirectory {data_directory}
+HiddenServiceDir {hidden_service_dir}
+HiddenServicePort 80 127.0.0.1:8000
+"""
+
+    with open(torrc_path, "w") as f:
+        f.write(torrc_content)
+
+    print(f"'torrc' created at {torrc_path}")
+
+    tor_process = subprocess.Popen(
+        [tor_path, "-f", torrc_path],
+        stdout=subprocess.PIPE,
+        stderr=subprocess.STDOUT,
+        text=True,
+        bufsize=1
+    )
+
+    for line in tor_process.stdout:
+        print(line.strip())
+        if "Bootstrapped 100%" in line:
+            print("Tor is fully bootstrapped and ready.")
+            break
+
+    flask_thread = threading.Thread(target=run_flask)
+    flask_thread.start()
+
+    launch_browser()
