@@ -343,13 +343,12 @@ def main():
     tor_process = run_tor()
     
     print("Waiting for Tor to initialize...")
-    time.sleep(3)
     
     flask_thread = threading.Thread(target=run_flask, daemon=True)
     flask_thread.start()
     
     print("Waiting for Flask to initialize...")
-    time.sleep(2)
+    time.sleep(3)
     
     print("Starting Wraith Browser...")
     app = QApplication(sys.argv)
