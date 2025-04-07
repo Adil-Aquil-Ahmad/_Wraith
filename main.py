@@ -20,7 +20,7 @@ from werkzeug.utils import secure_filename
 from bson import ObjectId
 from bson import Binary
 
-
+# Script for automation
 def print_stream(stream, prefix):
     while True:
         line = stream.readline()
